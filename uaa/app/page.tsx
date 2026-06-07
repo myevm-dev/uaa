@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar"
 import { Sidebar } from "@/components/sidebar"
 import { ChatArea } from "@/components/chat-area"
 
-export type AppMode = "chat" | "manage" | "create"
+export type AppMode = "chat" | "manage" | "create" | "store"
 
 export default function Home() {
   const [mode, setMode] = useState<AppMode>("create")
@@ -22,7 +22,6 @@ export default function Home() {
 
       <div className="flex min-h-0 flex-1 overflow-hidden">
         {sidebarOpen && <Sidebar mode={mode} setMode={setMode} />}
-
         <ChatArea mode={mode} />
       </div>
     </div>

@@ -66,7 +66,61 @@ export function Sidebar({ mode, setMode }: SidebarProps) {
     return <ManageSidebar />
   }
 
+  if (mode === "store") {
+    return <StoreSidebar />
+  }
+
   return <ChatSidebar setMode={setMode} />
+
+}
+
+function StoreSidebar() {
+  return (
+    <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+      <div className="border-b border-sidebar-border p-4">
+        <div className="flex items-center gap-2">
+
+          <div>
+            <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
+              Store
+            </h2>
+
+          </div>
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="space-y-3">
+          <div className="rounded-2xl border border-sidebar-border bg-sidebar-accent/60 p-4">
+            <h3 className="text-sm font-semibold text-sidebar-foreground">
+              Identity Packs
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Personality templates, trait packs, memory styles, and behavior presets.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-sidebar-border bg-sidebar-accent/60 p-4">
+            <h3 className="text-sm font-semibold text-sidebar-foreground">
+              Visual Styles
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Orb themes, neural activity effects, avatar badges, and profile frames.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-sidebar-border bg-sidebar-accent/60 p-4">
+            <h3 className="text-sm font-semibold text-sidebar-foreground">
+              Agent Skills
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Add-on capabilities for research, posting, trading, scheduling, or automation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  )
 }
 
 function ChatSidebar({ setMode }: { setMode: (mode: AppMode) => void }) {
@@ -77,17 +131,13 @@ function ChatSidebar({ setMode }: { setMode: (mode: AppMode) => void }) {
     <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <div className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
-            <Bot className="h-5 w-5 text-primary" />
-          </div>
+       
 
           <div>
             <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
-              Chat
+              Chat with NFT
             </h2>
-            <p className="text-xs text-muted-foreground">
-              Select an identity to chat with
-            </p>
+        
           </div>
         </div>
       </div>
@@ -187,17 +237,13 @@ function CreateSidebar() {
     <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <div className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
-            <FileJson className="h-5 w-5 text-primary" />
-          </div>
+   
 
           <div>
             <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
-              Metadata Builder
+              Metadata
             </h2>
-            <p className="text-xs text-muted-foreground">
-              Shape the identity before minting
-            </p>
+  
           </div>
         </div>
       </div>
@@ -266,17 +312,13 @@ function ManageSidebar() {
     <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <div className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
-            <Layers className="h-5 w-5 text-primary" />
-          </div>
+  
 
           <div>
             <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
               Manage
             </h2>
-            <p className="text-xs text-muted-foreground">
-              Identity library and minting tools
-            </p>
+      
           </div>
         </div>
       </div>

@@ -1,3 +1,4 @@
+// components/chat-area.tsx
 "use client"
 
 import {
@@ -13,6 +14,12 @@ import {
   Check,
   SlidersHorizontal,
   Layers,
+  Store,
+  ShoppingBag,
+  Brain,
+  ShieldCheck,
+  Gem,
+  WandSparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -40,6 +47,7 @@ export function ChatArea({ mode }: ChatAreaProps) {
   const isCreateMode = mode === "create"
   const isChatMode = mode === "chat"
   const isManageMode = mode === "manage"
+  const isStoreMode = mode === "store"
 
   const handleSend = () => {
     const text = input.trim()
@@ -49,7 +57,9 @@ export function ChatArea({ mode }: ChatAreaProps) {
       ? "Platform AI metadata builder request:"
       : isChatMode
         ? "Character chat request:"
-        : "Manager request:"
+        : isStoreMode
+          ? "Store assistant request:"
+          : "Manager request:"
 
     sendMessage({ text: `${modePrefix}\n${text}` })
     setInput("")
@@ -80,6 +90,96 @@ export function ChatArea({ mode }: ChatAreaProps) {
     )
   }
 
+  if (isStoreMode) {
+    return (
+      <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary" />
+
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="shader-orb shader-orb-1" />
+          <div className="shader-orb shader-orb-2" />
+          <div className="shader-orb shader-orb-3" />
+        </div>
+
+        <div className="absolute inset-0 opacity-[0.12] grid-background" />
+
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto p-8">
+          <div className="mb-8 flex items-start justify-between gap-6">
+            <div>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur-xl">
+                <Store className="h-3.5 w-3.5 text-primary" />
+                UAA Marketplace
+              </div>
+
+              <h1 className="font-[var(--font-heading)] text-4xl font-semibold tracking-tight text-foreground">
+                Store
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Browse identity packs, visual styles, profile frames, metadata tools, and agent skills for Universal Autonomous Accounts.
+              </p>
+            </div>
+
+            <Button className="btn-3d btn-glow rounded-full bg-primary px-5 text-primary-foreground">
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              View Cart
+            </Button>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <StoreCard
+              icon={<Brain className="h-5 w-5" />}
+              title="Neural Identity Pack"
+              description="Starter personality templates for analytical, creative, social, strategic, and lore-driven identities."
+              tag="Personality"
+              price="Free"
+            />
+
+            <StoreCard
+              icon={<Sparkles className="h-5 w-5" />}
+              title="Black Orb Profile Frame"
+              description="Avatar-style profile circle with glow, neural activity, badge-ready framing, and dark presentation styling."
+              tag="Visual"
+              price="Included"
+            />
+
+            <StoreCard
+              icon={<WandSparkles className="h-5 w-5" />}
+              title="Creator Agent Skills"
+              description="Give an identity tools for idea generation, metadata writing, brand voice, content planning, and creative support."
+              tag="Skills"
+              price="Coming soon"
+            />
+
+            <StoreCard
+              icon={<FileText className="h-5 w-5" />}
+              title="Metadata Builder Pro"
+              description="Advanced structured output for NFT metadata, traits, behavior rules, system prompts, and mint-ready JSON."
+              tag="Builder"
+              price="Coming soon"
+            />
+
+            <StoreCard
+              icon={<Gem className="h-5 w-5" />}
+              title="Memory Style Pack"
+              description="Presets for journal memory, lore memory, assistant memory, owner preference memory, and character continuity."
+              tag="Memory"
+              price="Coming soon"
+            />
+
+            <StoreCard
+              icon={<ShieldCheck className="h-5 w-5" />}
+              title="Autonomy Rules Pack"
+              description="Reusable boundaries for safe automation, owner approval, tool access, spending limits, and identity permissions."
+              tag="Rules"
+              price="Coming soon"
+            />
+          </div>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary" />
@@ -91,7 +191,6 @@ export function ChatArea({ mode }: ChatAreaProps) {
       </div>
 
       <div className="absolute inset-0 opacity-[0.12] grid-background" />
-
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-6 pb-6">
         {messages.length === 0 ? (
@@ -316,5 +415,52 @@ export function ChatArea({ mode }: ChatAreaProps) {
         </div>
       </div>
     </main>
+  )
+}
+
+function StoreCard({
+  icon,
+  title,
+  description,
+  tag,
+  price,
+}: {
+  icon: React.ReactNode
+  title: string
+  description: string
+  tag: string
+  price: string
+}) {
+  return (
+    <div className="card-3d rounded-3xl border border-border/70 bg-card/80 p-5 shadow-xl backdrop-blur-xl">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+          {icon}
+        </div>
+
+        <span className="rounded-full border border-border/60 bg-secondary/80 px-3 py-1 text-xs font-medium text-muted-foreground">
+          {tag}
+        </span>
+      </div>
+
+      <h3 className="font-[var(--font-heading)] text-xl font-semibold text-card-foreground">
+        {title}
+      </h3>
+
+      <p className="mt-2 min-h-[64px] text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
+
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <span className="text-sm font-semibold text-primary">{price}</span>
+
+        <Button
+          type="button"
+          className="btn-3d btn-glow rounded-full bg-primary px-4 text-primary-foreground"
+        >
+          View Item
+        </Button>
+      </div>
+    </div>
   )
 }

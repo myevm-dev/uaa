@@ -3,11 +3,9 @@
 import Link from "next/link"
 import { useCallback, useState } from "react"
 import {
-  Bot,
-  Layers,
   PanelLeftClose,
   PanelLeftOpen,
-  PenLine,
+
   Sparkles,
   Wallet,
 } from "lucide-react"
@@ -38,9 +36,12 @@ function shortenAddress(address: string) {
 }
 
 function modeButtonClass(active: boolean) {
+  const base =
+    "btn-3d h-10 w-28 justify-center gap-2 rounded-full px-4 text-sm font-medium"
+
   return active
-    ? "btn-3d btn-glow gap-2 rounded-full bg-primary px-4 text-primary-foreground shadow-xl"
-    : "btn-3d gap-2 rounded-full border border-border/60 bg-secondary/70 px-4 text-foreground hover:bg-secondary"
+    ? `${base} btn-glow bg-primary text-primary-foreground shadow-xl`
+    : `${base} border border-border/60 bg-secondary/70 text-foreground hover:bg-secondary`
 }
 
 export function Navbar({
@@ -117,7 +118,7 @@ export function Navbar({
           onClick={() => setMode("chat")}
           className={modeButtonClass(mode === "chat")}
         >
-          <Bot className="h-4 w-4" />
+         
           Chat
         </Button>
 
@@ -126,8 +127,16 @@ export function Navbar({
           onClick={() => setMode("manage")}
           className={modeButtonClass(mode === "manage")}
         >
-          <Layers className="h-4 w-4" />
+          
           Manage
+        </Button>
+        <Button
+          type="button"
+          onClick={() => setMode("store")}
+          className={modeButtonClass(mode === "store")}
+        >
+         
+          Store
         </Button>
 
         <Button
@@ -135,7 +144,7 @@ export function Navbar({
           onClick={() => setMode("create")}
           className={modeButtonClass(mode === "create")}
         >
-          <PenLine className="h-4 w-4" />
+         
           Create
         </Button>
       </nav>
