@@ -103,11 +103,9 @@ export function Navbar({
 
           <div>
             <h1 className="font-[var(--font-heading)] text-lg font-semibold tracking-tight text-foreground">
-              Universal Autonomous Accounts
+              UAA
             </h1>
-            <p className="text-xs text-muted-foreground">
-              AI identity NFTs connected to owned NFTs
-            </p>
+       
           </div>
         </Link>
       </div>
