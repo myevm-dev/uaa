@@ -63,10 +63,10 @@ export function Sidebar() {
 
           <div>
             <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
-              Identity Source
+              Chat
             </h2>
             <p className="text-xs text-muted-foreground">
-              Select an NFT to shape the AI
+              Select an NFT to Chat with
             </p>
           </div>
         </div>
