@@ -1,4 +1,3 @@
-// components/chat-area.tsx
 "use client"
 
 import {
@@ -13,14 +12,20 @@ import {
   X,
   Check,
   SlidersHorizontal,
+  Layers,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { ParticleOrb } from "@/components/particle-orb"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
+import type { AppMode } from "@/app/page"
 
-export function ChatArea() {
+type ChatAreaProps = {
+  mode: AppMode
+}
+
+export function ChatArea({ mode }: ChatAreaProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [configDropdownOpen, setConfigDropdownOpen] = useState(false)
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false)
@@ -32,39 +37,62 @@ export function ChatArea() {
 
   const isStreaming = status === "streaming" || status === "submitted"
 
+  const isCreateMode = mode === "create"
+  const isChatMode = mode === "chat"
+  const isManageMode = mode === "manage"
+
   const handleSend = () => {
     const text = input.trim()
     if (!text || isStreaming) return
 
-    sendMessage({ text })
+    const modePrefix = isCreateMode
+      ? "Platform AI metadata builder request:"
+      : isChatMode
+        ? "Character chat request:"
+        : "Manager request:"
+
+    sendMessage({ text: `${modePrefix}\n${text}` })
     setInput("")
+  }
+
+  if (isManageMode) {
+    return (
+      <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary" />
+        <div className="absolute inset-0 opacity-[0.12] grid-background" />
+
+        <div className="relative z-10 flex flex-1 items-center justify-center p-8">
+          <div className="card-3d max-w-2xl rounded-3xl border border-border/70 bg-card/80 p-8 text-center shadow-2xl backdrop-blur-xl">
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+              <Layers className="h-7 w-7" />
+            </div>
+
+            <h1 className="mb-3 font-[var(--font-heading)] text-4xl font-semibold text-foreground">
+              Manage Identities
+            </h1>
+
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              This will become the control center for drafts, minted identities, metadata versions, contract settings, and NFT bindings.
+            </p>
+          </div>
+        </div>
+      </main>
+    )
   }
 
   return (
     <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
-      {/* Theme-aware background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary" />
 
-      {/* Animated gradient orbs for shader effect */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="shader-orb shader-orb-1" />
         <div className="shader-orb shader-orb-2" />
         <div className="shader-orb shader-orb-3" />
       </div>
 
-      {/* Animated grid overlay */}
       <div className="absolute inset-0 opacity-[0.12] grid-background" />
 
-      {/* Noise texture for depth */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.025] mix-blend-soft-light"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-        }}
-      />
 
-      
-      {/* Main Content */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-6 pb-6">
         {messages.length === 0 ? (
           <>
@@ -74,27 +102,32 @@ export function ChatArea() {
 
             <div className="mb-8 max-w-3xl text-center">
               <h1 className="mb-3 font-[var(--font-heading)] text-4xl font-semibold tracking-tight text-foreground">
-                Create and Preview an Autonomous Identity
+                {isCreateMode
+                  ? "Create a Universal Autonomous Account"
+                  : "Chat with an Autonomous Identity"}
               </h1>
 
               <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Select an owned NFT, generate a neural identity, then chat with it before saving or minting the final AI personality NFT.
+                {isCreateMode
+                  ? "Talk to the platform AI to generate structured personality metadata, behavior rules, and system prompts for a new identity NFT."
+                  : "Select one of your AI characters from the sidebar and chat with its generated personality."}
               </p>
             </div>
 
-            {/* Quick Actions */}
             <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
               <Button
                 variant="secondary"
                 className="btn-3d btn-glow gap-2 border border-border/50 bg-secondary/80 text-foreground shadow-lg backdrop-blur-sm hover:bg-secondary"
                 onClick={() =>
                   sendMessage({
-                    text: "Generate a personality profile for the selected NFT using the Universal Autonomous Accounts format.",
+                    text: isCreateMode
+                      ? "Generate a full Universal Autonomous Account personality metadata profile."
+                      : "Start a chat as the selected autonomous identity.",
                   })
                 }
               >
                 <Sparkles className="h-4 w-4" />
-                Generate Personality
+                {isCreateMode ? "Generate Metadata" : "Start Chat"}
               </Button>
 
               <Button
@@ -102,12 +135,14 @@ export function ChatArea() {
                 className="btn-3d btn-glow gap-2 border border-border/50 bg-secondary/80 text-foreground shadow-lg backdrop-blur-sm hover:bg-secondary"
                 onClick={() =>
                   sendMessage({
-                    text: "Start a preview chat as the generated autonomous identity.",
+                    text: isCreateMode
+                      ? "Help me refine the traits, boundaries, and speaking style for this identity."
+                      : "Explain this character's personality and how it should respond.",
                   })
                 }
               >
                 <Bot className="h-4 w-4" />
-                Preview Identity
+                {isCreateMode ? "Refine Traits" : "Identity Info"}
               </Button>
 
               <Button
@@ -160,7 +195,6 @@ export function ChatArea() {
           </div>
         )}
 
-        {/* Input Area */}
         <div className="w-full max-w-4xl">
           {isRecording && (
             <div className="input-3d mb-3 rounded-full border border-border/60 bg-card/90 px-6 py-3 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-2 fade-in duration-300">
@@ -218,7 +252,11 @@ export function ChatArea() {
                       handleSend()
                     }
                   }}
-                  placeholder="Ask this identity anything..."
+                  placeholder={
+                    isCreateMode
+                      ? "Ask the platform AI to build or refine this identity..."
+                      : "Ask this identity anything..."
+                  }
                   className="min-h-[80px] flex-1 resize-none border-none bg-transparent text-lg font-normal text-foreground outline-none placeholder:text-muted-foreground"
                 />
               </div>
@@ -249,7 +287,7 @@ export function ChatArea() {
                     className="btn-3d gap-2 text-muted-foreground hover:text-foreground"
                   >
                     <SlidersHorizontal className="h-4 w-4" />
-                    Traits
+                    {isCreateMode ? "Metadata" : "Traits"}
                   </Button>
                 </div>
 

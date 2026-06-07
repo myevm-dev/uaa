@@ -4,12 +4,22 @@ import {
   BadgeCheck,
   Bot,
   CirclePlus,
+  FileJson,
   GalleryVerticalEnd,
   ImageIcon,
+  Layers,
+  ListChecks,
+  Settings2,
   Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import type { AppMode } from "@/app/page"
+
+type SidebarProps = {
+  mode: AppMode
+  setMode: (mode: AppMode) => void
+}
 
 type MockNft = {
   id: string
@@ -47,14 +57,24 @@ const mockNfts: MockNft[] = [
   },
 ]
 
-export function Sidebar() {
-  const [selectedNftId, setSelectedNftId] = useState(mockNfts[0]?.id ?? "")
+export function Sidebar({ mode, setMode }: SidebarProps) {
+  if (mode === "create") {
+    return <CreateSidebar />
+  }
 
+  if (mode === "manage") {
+    return <ManageSidebar />
+  }
+
+  return <ChatSidebar setMode={setMode} />
+}
+
+function ChatSidebar({ setMode }: { setMode: (mode: AppMode) => void }) {
+  const [selectedNftId, setSelectedNftId] = useState(mockNfts[0]?.id ?? "")
   const selectedNft = mockNfts.find((nft) => nft.id === selectedNftId)
 
   return (
     <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
-      {/* Header */}
       <div className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
@@ -66,16 +86,16 @@ export function Sidebar() {
               Chat
             </h2>
             <p className="text-xs text-muted-foreground">
-              Select an NFT to Chat with
+              Select an identity to chat with
             </p>
           </div>
         </div>
       </div>
 
-      {/* Create Identity Button */}
       <div className="p-3">
         <Button
           variant="secondary"
+          onClick={() => setMode("create")}
           className="btn-3d btn-glow w-full justify-start gap-2 bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/80"
         >
           <CirclePlus className="h-4 w-4" />
@@ -83,7 +103,6 @@ export function Sidebar() {
         </Button>
       </div>
 
-      {/* Selected NFT */}
       {selectedNft && (
         <div className="px-3 pb-3">
           <div className="card-3d rounded-2xl border border-sidebar-border bg-sidebar-accent/60 p-4">
@@ -120,11 +139,10 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* NFT List */}
       <div className="min-h-0 flex-1 overflow-y-auto px-3">
         <div className="mb-4">
           <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Owned NFTs
+            My Characters
           </h3>
 
           <div className="space-y-2">
@@ -159,35 +177,135 @@ export function Sidebar() {
             })}
           </div>
         </div>
+      </div>
+    </aside>
+  )
+}
 
-        <div className="mb-4">
-          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Draft Identities
+function CreateSidebar() {
+  return (
+    <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+      <div className="border-b border-sidebar-border p-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
+            <FileJson className="h-5 w-5 text-primary" />
+          </div>
+
+          <div>
+            <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
+              Metadata Builder
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Shape the identity before minting
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="space-y-3">
+          <MetadataField label="Name" value="Neural Seeker" />
+          <MetadataField label="Role" value="Research companion" />
+          <MetadataField label="Tone" value="Curious, concise, strategic" />
+          <MetadataField label="Memory Style" value="Long-term identity memory" />
+          <MetadataField label="Autonomy" value="Guided by owner approval" />
+        </div>
+
+        <div className="mt-5">
+          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Personality Traits
           </h3>
 
+          <div className="flex flex-wrap gap-2">
+            {["Curious", "Analytical", "Creative", "Calm", "Loyal", "Direct"].map((trait) => (
+              <span
+                key={trait}
+                className="rounded-full border border-sidebar-border bg-background/40 px-3 py-1 text-xs text-muted-foreground"
+              >
+                {trait}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 rounded-2xl border border-sidebar-border bg-sidebar-accent/60 p-4">
+          <div className="mb-2 flex items-center gap-2">
+            <ListChecks className="h-4 w-4 text-primary" />
+            <h4 className="text-sm font-semibold text-sidebar-foreground">
+              Output Format
+            </h4>
+          </div>
+
+          <p className="text-xs leading-relaxed text-muted-foreground">
+            The platform AI should generate name, title, core identity, traits, speaking style, behavior rules, boundaries, visual prompt, and system prompt.
+          </p>
+        </div>
+
+        <Button className="btn-3d btn-glow mt-4 w-full gap-2 bg-primary text-primary-foreground">
+          <Sparkles className="h-4 w-4" />
+          Generate Metadata
+        </Button>
+      </div>
+    </aside>
+  )
+}
+
+function MetadataField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-sidebar-border bg-sidebar-accent/60 p-3">
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <p className="text-sm text-sidebar-foreground">{value}</p>
+    </div>
+  )
+}
+
+function ManageSidebar() {
+  return (
+    <aside className="flex w-80 shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
+      <div className="border-b border-sidebar-border p-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-accent">
+            <Layers className="h-5 w-5 text-primary" />
+          </div>
+
+          <div>
+            <h2 className="font-[var(--font-heading)] text-base font-semibold text-sidebar-foreground">
+              Manage
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Identity library and minting tools
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        <div className="space-y-2">
           <Button
             variant="ghost"
             className="btn-3d w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent"
           >
             <GalleryVerticalEnd className="h-4 w-4" />
-            No saved drafts yet
+            Draft Identities
           </Button>
-        </div>
-      </div>
 
-      {/* Footer Card */}
-      <div className="p-3">
-        <div className="card-3d rounded-xl bg-sidebar-accent p-4">
-          <div className="mb-2 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <h4 className="text-sm font-semibold text-sidebar-foreground">
-              Preview before minting
-            </h4>
-          </div>
+          <Button
+            variant="ghost"
+            className="btn-3d w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent"
+          >
+            <BadgeCheck className="h-4 w-4" />
+            Minted Identities
+          </Button>
 
-          <p className="text-xs leading-relaxed text-muted-foreground">
-            Generate a personality, test it in chat, then save or mint the final identity NFT.
-          </p>
+          <Button
+            variant="ghost"
+            className="btn-3d w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent"
+          >
+            <Settings2 className="h-4 w-4" />
+            Contract Settings
+          </Button>
         </div>
       </div>
     </aside>
