@@ -38,7 +38,6 @@ function randomColor() {
 
 function randomPalette() {
   const colorCount = randomInt(4, 9)
-
   return Array.from({ length: colorCount }, () => randomColor())
 }
 
@@ -49,12 +48,12 @@ function generateOrbIdentity(): OrbIdentity {
 
     // Keep these fixed so the orb does not change overall size
     dotSize: 0.032,
-    radius: 1.2,
+    radius: 1.22,
 
     // These can vary so each orb still feels unique
     rotationSpeed: randomBetween(0.04, 0.16),
     wobbleSpeed: randomBetween(0.03, 0.11),
-    glowStrength: randomBetween(0.12, 0.28),
+    glowStrength: randomBetween(0.18, 0.34),
   }
 }
 
@@ -132,7 +131,7 @@ function DottedSphere({ identity }: { identity: OrbIdentity }) {
           <meshStandardMaterial
             color={colors[i]}
             emissive={colors[i]}
-            emissiveIntensity={0.9}
+            emissiveIntensity={1}
             metalness={0.85}
             roughness={0.12}
           />
@@ -145,10 +144,10 @@ function DottedSphere({ identity }: { identity: OrbIdentity }) {
 function Scene({ identity }: { identity: OrbIdentity }) {
   return (
     <>
-      <ambientLight intensity={0.6} />
-      <pointLight position={[5, 5, 5]} intensity={2} color="#ffffff" />
-      <pointLight position={[-5, -5, -5]} intensity={1} color="#cccccc" />
-      <pointLight position={[0, 0, 5]} intensity={1.5} color="#ffffff" />
+      <ambientLight intensity={0.75} />
+      <pointLight position={[5, 5, 5]} intensity={2.2} color="#ffffff" />
+      <pointLight position={[-5, -5, -5]} intensity={1.2} color="#cccccc" />
+      <pointLight position={[0, 0, 5]} intensity={1.7} color="#ffffff" />
 
       <DottedSphere identity={identity} />
     </>
@@ -173,18 +172,18 @@ export function ParticleOrb() {
 
     const stops = identity.colors
       .map((color, index) => {
-        const percent = Math.round((index / Math.max(1, identity.colors.length - 1)) * 55)
+        const percent = Math.round((index / Math.max(1, identity.colors.length - 1)) * 58)
         return `${color} ${percent}%`
       })
       .join(", ")
 
-    return `radial-gradient(circle, ${stops}, transparent 75%)`
+    return `radial-gradient(circle, ${stops}, transparent 74%)`
   }, [identity])
 
   if (!mounted || !identity) {
     return (
       <div className="flex flex-col items-center gap-4">
-        <div className="w-48 h-48 relative" />
+        <div className="relative h-56 w-56 rounded-full border border-white/15 bg-black p-2 shadow-2xl" />
 
         <button
           type="button"
@@ -200,22 +199,40 @@ export function ParticleOrb() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="w-48 h-48 relative">
+      <div className="relative h-56 w-56 rounded-full border border-white/15 bg-black p-2 shadow-2xl">
         <div
-          className="absolute inset-[-8%] rounded-full blur-xl pointer-events-none"
+          className="pointer-events-none absolute inset-0 rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle at 35% 25%, rgba(255,255,255,0.08), transparent 45%)",
+          }}
+        />
+
+        <div
+          className="pointer-events-none absolute inset-[2%] rounded-full blur-2xl"
           style={{
             opacity: identity.glowStrength,
             background: glowBackground,
           }}
         />
 
-        <Canvas
-          camera={{ position: [0, 0, 4], fov: 45 }}
-          style={{ background: "transparent" }}
-          gl={{ alpha: true, antialias: true }}
-        >
-          <Scene identity={identity} />
-        </Canvas>
+        <div
+          className="pointer-events-none absolute inset-[10%] rounded-full blur-xl"
+          style={{
+            opacity: identity.glowStrength * 0.9,
+            background: glowBackground,
+          }}
+        />
+
+        <div className="relative h-full w-full overflow-hidden rounded-full bg-black">
+          <Canvas
+            camera={{ position: [0, 0, 4], fov: 45 }}
+            style={{ background: "transparent" }}
+            gl={{ alpha: true, antialias: true }}
+          >
+            <Scene identity={identity} />
+          </Canvas>
+        </div>
       </div>
 
       <button

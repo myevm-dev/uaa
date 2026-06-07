@@ -63,69 +63,7 @@ export function ChatArea() {
         }}
       />
 
-      {/* Header */}
-      <header className="relative z-10 flex items-center justify-between border-b border-border/50 bg-background/40 px-6 py-4 backdrop-blur-sm">
-        <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          Claude Sonnet 4.6
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Button
-              className="btn-3d btn-glow gap-2 border border-border/50 bg-secondary/80 text-foreground shadow-lg backdrop-blur-sm hover:bg-secondary"
-              onClick={() => setConfigDropdownOpen(!configDropdownOpen)}
-            >
-              <Settings className="h-4 w-4" />
-              Configuration
-            </Button>
-
-            {configDropdownOpen && (
-              <div className="dropdown-menu right-0 left-auto">
-                <button className="dropdown-item" onClick={() => setConfigDropdownOpen(false)}>
-                  General Settings
-                </button>
-                <button className="dropdown-item" onClick={() => setConfigDropdownOpen(false)}>
-                  Personality Format
-                </button>
-                <button className="dropdown-item" onClick={() => setConfigDropdownOpen(false)}>
-                  NFT Binding Rules
-                </button>
-                <button className="dropdown-item" onClick={() => setConfigDropdownOpen(false)}>
-                  Advanced
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="relative">
-            <Button
-              className="btn-3d btn-glow gap-2 border border-border/50 bg-secondary/80 text-foreground shadow-lg backdrop-blur-sm hover:bg-secondary"
-              onClick={() => setExportDropdownOpen(!exportDropdownOpen)}
-            >
-              <Upload className="h-4 w-4" />
-              Export
-            </Button>
-
-            {exportDropdownOpen && (
-              <div className="dropdown-menu right-0 left-auto">
-                <button className="dropdown-item" onClick={() => setExportDropdownOpen(false)}>
-                  Export Personality JSON
-                </button>
-                <button className="dropdown-item" onClick={() => setExportDropdownOpen(false)}>
-                  Export Metadata
-                </button>
-                <button className="dropdown-item" onClick={() => setExportDropdownOpen(false)}>
-                  Save Draft
-                </button>
-                <button className="dropdown-item" onClick={() => setExportDropdownOpen(false)}>
-                  Mint Identity
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-
+      
       {/* Main Content */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col items-center justify-center px-6 pb-6">
         {messages.length === 0 ? (
