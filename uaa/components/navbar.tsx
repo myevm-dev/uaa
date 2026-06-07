@@ -1,5 +1,7 @@
+// components/navbar.tsx
 "use client"
 
+import Link from "next/link"
 import { useCallback, useState } from "react"
 import { Wallet, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -48,7 +50,7 @@ export function Navbar() {
 
   return (
     <header className="relative z-20 flex h-16 shrink-0 items-center justify-between border-b border-border/50 bg-background/80 px-5 backdrop-blur-xl">
-      <div className="flex items-center gap-3">
+      <Link href="/landing" className="flex items-center gap-3 transition-opacity hover:opacity-80">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg">
           <Sparkles className="h-5 w-5" />
         </div>
@@ -61,15 +63,16 @@ export function Navbar() {
             AI identity NFTs connected to owned NFTs
           </p>
         </div>
-      </div>
+      </Link>
 
       <div className="flex items-center gap-3">
-         <ThemeToggle />
+        <ThemeToggle />
+
         <Button
           type="button"
           onClick={connectWallet}
           disabled={isConnecting}
-          className="btn-3d btn-glow gap-2 rounded-full bg-gradient-to-br from-primary via-gray-900 to-black px-4 text-white shadow-xl"
+          className="btn-3d btn-glow gap-2 rounded-full bg-primary px-4 text-primary-foreground shadow-xl"
         >
           <Wallet className="h-4 w-4" />
           {walletAddress
